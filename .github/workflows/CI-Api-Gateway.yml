@@ -33,7 +33,7 @@ jobs:
 
       # Étape 5 : Exécuter les tests unitaires
       - name: Run tests
-        run: dotnet test simpl_cine/simpl_cine.test/simpl_cine.test.csproj --no-restore --verbosity normal
+        run: dotnet test simpl_cine.test/simpl_cine.test.csproj --no-restore --verbosity normal
 
       # Étape 6 : Publier les artefacts de compilation (facultatif)
       - name: Publish artifact (optional)
