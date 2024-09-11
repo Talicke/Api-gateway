@@ -15,7 +15,7 @@ jobs:
     steps:
       # Étape 1 : Vérification du code source depuis le repo
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Étape 2 : Installer le SDK .NET Core
       - name: Setup .NET Core SDK
@@ -45,4 +45,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: '**/TestResults/*.xml'
+          path: '**/TestResults/*.trx'
