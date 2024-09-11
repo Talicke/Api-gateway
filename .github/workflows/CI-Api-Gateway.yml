@@ -25,7 +25,7 @@ jobs:
 
       # Étape 3 : Restaurer les dépendances (en spécifiant le chemin vers le projet dans simpl_cine)
       - name: Restore dependencies
-        run: dotnet restore simpl_cine.sln --no-cache
+        run: dotnet restore simpl_cine/simpl_cine.sln --no-cache
 
       # Étape 4 : Compiler la solution
       - name: Build solution
@@ -33,7 +33,7 @@ jobs:
 
       # Étape 5 : Exécuter les tests unitaires
       - name: Run tests
-        run: dotnet test simpl_cine.test/simpl_cine.test.csproj --no-restore --verbosity normal
+        run: dotnet test simpl_cine/simpl_cine.test/simpl_cine.test.csproj --no-restore --verbosity normal
 
       # Étape 6 : Publier les artefacts de compilation (facultatif)
       - name: Publish artifact (optional)
