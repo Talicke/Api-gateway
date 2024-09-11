@@ -43,7 +43,7 @@ jobs:
       # Étape 7 : Publier les résultats des tests (facultatif)
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: '**/TestResults/*.xml'
