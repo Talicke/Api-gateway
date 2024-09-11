@@ -1,0 +1,49 @@
+name: CI for .NET Core API Gateway
+
+# Déclenchement du workflow sur les push et pull request à la branche develop
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Vérification du code source depuis le repo
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Étape 2 : Installer le SDK .NET Core (version 8.0)
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x' # Mise à jour vers la version .NET 8.0
+
+      # Étape 3 : Restaurer les dépendances
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Étape 4 : Compiler la solution
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
+
+      # Étape 5 : Exécuter les tests unitaires
+      - name: Run tests
+        run: dotnet test --no-restore --verbosity normal
+
+      # Étape 6 : Publier les artefacts de compilation (facultatif)
+      - name: Publish artifact (optional)
+        run: dotnet publish --configuration Release --output ./publish
+
+      # Étape 7 : Publier les résultats des tests (facultatif)
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: '**/TestResults/*.xml'
