@@ -60,6 +60,9 @@ jobs:
           name: code-coverage-report
           path: coverage-report
 
+      - name: List all files
+        run: ls -R .
+
       # Étape 10 : Publier les artefacts de compilation (facultatif)
       - name: Publish artifact (optional)
         run: dotnet publish simpl_cine/simpl_cine.csproj --configuration Release --output ./publish
