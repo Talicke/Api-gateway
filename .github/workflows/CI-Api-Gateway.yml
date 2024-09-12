@@ -51,7 +51,7 @@ jobs:
 
       # Étape 8 : Générer le rapport de couverture de code
       - name: Generate code coverage report
-        run: reportgenerator "-reports:**/TestResults/coverage.opencover.xml" "-targetdir:coverage-report" "-reporttypes:Html"
+        run: reportgenerator "-reports:$(System.DefaultWorkingDirectory)/TestResults/coverage.opencover.xml" "-targetdir:coverage-report" "-reporttypes:Html"
 
       # Étape 9 : Publier le rapport de couverture de code en tant qu'artefact
       - name: Upload coverage report
