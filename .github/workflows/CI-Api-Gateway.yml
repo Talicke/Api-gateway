@@ -77,7 +77,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # Utilisé seulement pour les dépôts privés
-          files: '**/TestResults/coverage.opencover.xml' # Fichier OpenCover généré par Coverlet
+          files: '**/coverage.opencover.xml' # Fichier OpenCover généré par Coverlet
           flags: unittests
           name: code-coverage-report
           fail_ci_if_error: true
