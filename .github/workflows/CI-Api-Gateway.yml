@@ -33,7 +33,7 @@ jobs:
 
       # Étape 5 : Exécuter les tests unitaires avec la collecte de couverture de code
       - name: Run tests with code coverage
-        run: dotnet test simpl_cine.test/simpl_cine.test.csproj --no-restore --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/coverage.opencover.xml --verbosity minimal
+        run: dotnet test simpl_cine/simpl_cine.test/simpl_cine.test.csproj --no-restore --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/coverage.opencover.xml --verbosity minimal
 
       # Étape 6 : Analyse SonarCloud (y compris la couverture de code)
       - name: SonarCloud Scan
