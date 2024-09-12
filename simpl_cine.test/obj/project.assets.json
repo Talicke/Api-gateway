@@ -1015,7 +1015,7 @@
       "ReportGenerator/5.3.9": {
         "type": "package",
         "build": {
-          "build/netstandard2.0/_._": {}
+          "build/netstandard2.0/ReportGenerator.props": {}
         }
       },
       "Swashbuckle.AspNetCore/6.4.0": {
@@ -3693,6 +3693,7 @@
       "Microsoft.NET.Test.Sdk >= 17.8.0",
       "Microsoft.aspNetCore.Mvc.Testing >= 8.0.8",
       "Moq >= 4.20.72",
+      "ReportGenerator >= 5.3.9",
       "coverlet.collector >= 6.0.0",
       "simpl_cine >= 1.0.0",
       "xunit >= 2.9.0",
@@ -3764,6 +3765,10 @@
           "Moq": {
             "target": "Package",
             "version": "[4.20.72, )"
+          },
+          "ReportGenerator": {
+            "target": "Package",
+            "version": "[5.3.9, )"
           },
           "coverlet.collector": {
             "target": "Package",
