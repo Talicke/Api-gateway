@@ -53,10 +53,6 @@ jobs:
       - name: Generate code coverage report
         run: reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:Html"
 
-      # Étape supplémentaire pour lister les fichiers générés après les tests
-      - name: List TestResults directory
-        run: ls -R TestResults
-
       # Étape 9 : Publier le rapport de couverture de code en tant qu'artefact
       - name: Upload coverage report
         uses: actions/upload-artifact@v3
