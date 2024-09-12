@@ -61,3 +61,13 @@ jobs:
         with:
           name: test-results
           path: '**/TestResults/*.trx'
+          
+# Étape 11 : Upload de la couverture de code vers Codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # Utilisé seulement pour les dépôts privés
+          files: '**/coverage.cobertura.xml' # Indique le chemin vers le fichier de couverture
+          flags: unittests
+          name: code-coverage-report
+          fail_ci_if_error: true
