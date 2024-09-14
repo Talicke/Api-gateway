@@ -36,6 +36,14 @@ jobs:
       - name: Run tests with code coverage
         run: dotnet test simpl_cine.test/simpl_cine.test.csproj --no-restore --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/coverage.opencover.xml --verbosity minimal
 
+      # Étape 7 : Installer ReportGenerator (pour générer un rapport lisible)
+      - name: Install ReportGenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      # Étape 8 : Générer le rapport de couverture de code
+      - name: Generate code coverage report
+        run: reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:Html"
+
       # Étape 6 : Analyse SonarCloud (y compris la couverture de code)
       - name: SonarCloud Scan
         env:
@@ -45,14 +53,6 @@ jobs:
           dotnet sonarscanner begin /k:"Talicke_Api-gateway" /o:"talicke" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="'**/coverage.cobertura.xml"
           dotnet build simpl_cine/simpl_cine.sln
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
-      # Étape 7 : Installer ReportGenerator (pour générer un rapport lisible)
-      - name: Install ReportGenerator
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
-
-      # Étape 8 : Générer le rapport de couverture de code
-      - name: Generate code coverage report
-        run: reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:Html"
 
       # Étape 9 : Publier le rapport de couverture de code en tant qu'artefact
       - name: Upload coverage report
