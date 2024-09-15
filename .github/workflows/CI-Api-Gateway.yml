@@ -51,6 +51,17 @@ jobs:
       - name: Generate code coverage report
         run: reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:Html"
 
+      # Étape 8 : Générer le rapport de couverture de code et le convertir en OpenCover
+      - name: Convert Cobertura to OpenCover
+        run: reportgenerator "-reports:coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:OpenCover"
+      
+      # Étape 9 : Publier le fichier OpenCover en tant qu'artefact
+      - name: Upload OpenCover coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: opencover-coverage-report
+          path: coverage-report/coverage.opencover.xml
+
       # Étape 6 : Analyse SonarCloud (y compris la couverture de code)
       - name: SonarCloud Scan
         env:
