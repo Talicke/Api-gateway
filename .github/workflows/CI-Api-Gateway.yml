@@ -53,7 +53,7 @@ jobs:
 
       # Étape 8 : Générer le rapport de couverture de code et le convertir en OpenCover
       - name: Convert Cobertura to OpenCover
-        run: reportgenerator "-reports:coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:OpenCover"
+        run: reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:OpenCover"
       
       # Étape 9 : Publier le fichier OpenCover en tant qu'artefact
       - name: Upload OpenCover coverage report
