@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: cobertura-coverage-report
-          path: '**/TestResults/coverage.cobertura.xml'
+          path: '**/coverage.cobertura.xml'
       
       # Étape 7 : Installer ReportGenerator (pour générer un rapport lisible)
       - name: Install ReportGenerator
