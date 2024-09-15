@@ -36,6 +36,13 @@ jobs:
       - name: Run tests with code coverage
         run: dotnet test simpl_cine.test/simpl_cine.test.csproj --no-restore --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/coverage.opencover.xml --verbosity detailed
 
+      # Étape : Publier le fichier de couverture Cobertura en tant qu'artefact
+      - name: Upload Cobertura coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: cobertura-coverage-report
+          path: '**/TestResults/coverage.cobertura.xml'
+      
       # Étape 7 : Installer ReportGenerator (pour générer un rapport lisible)
       - name: Install ReportGenerator
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
