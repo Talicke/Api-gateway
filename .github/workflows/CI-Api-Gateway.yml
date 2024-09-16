@@ -32,32 +32,25 @@ jobs:
       - name: Build solution
         run: dotnet build simpl_cine/simpl_cine.csproj --configuration Release --no-restore
 
-      # Étape 5 : Exécuter les tests unitaires avec la collecte de couverture de code
+      # Étape 5 : Exécuter les tests unitaires avec la collecte de couverture de code avec Coverlet
       - name: Run tests with code coverage
-        run: dotnet test simpl_cine.test/simpl_cine.test.csproj --no-restore --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/coverage.opencover.xml --verbosity detailed
+        run: dotnet test simpl_cine.test/simpl_cine.test.csproj --no-restore --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./TestResults/coverage.lcov --verbosity detailed
 
-      # Étape : Publier le fichier de couverture Cobertura en tant qu'artefact
-      - name: Upload Cobertura coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: cobertura-coverage-report
-          path: '**/coverage.cobertura.xml'
+      # Étape 6 : Convertir le rapport LCOV en format OpenCover
+      - name: Convert lcov to opencover
+        run: |
+          sudo apt-get install -y nodejs
+          sudo npm install -g lcov-to-opencover
+          lcov-to-opencover -i ./TestResults/coverage.lcov -o ./TestResults/coverage.opencover.xml
       
-      # Étape 7 : Installer ReportGenerator (pour générer un rapport lisible)
-      - name: Install ReportGenerator
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
-      # Étape 8 : Générer le rapport de couverture de code
-      - name: Generate code coverage report
-        run: reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:Html"
-
-      # Étape 6 : Analyse SonarCloud (y compris la couverture de code)
+      # Étape 7 : Analyse SonarCloud avec le rapport de couverture de code
       - name: SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          dotnet sonarscanner begin /k:"Talicke_Api-gateway" /o:"talicke" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**/*cobertura.xml"
+          dotnet sonarscanner begin /k:"Talicke_Api-gateway" /o:"talicke" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./TestResults/coverage.opencover.xml"
           dotnet build simpl_cine/simpl_cine.sln
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
@@ -68,27 +61,6 @@ jobs:
           name: code-coverage-report
           path: coverage-report
 
-      - name: List all files
-        run: ls -R .
-
       # Étape 10 : Publier les artefacts de compilation (facultatif)
       - name: Publish artifact (optional)
         run: dotnet publish simpl_cine/simpl_cine.csproj --configuration Release --output ./publish
-
-      # Étape 11 : Publier les résultats des tests (mise à jour vers v3)
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: '**/TestResults/*.trx'
-
-      # Étape 12 : Upload de la couverture de code vers Codecov
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }} # Utilisé seulement pour les dépôts privés
-          files: '**/coverage.cobertura.xml' # Fichier OpenCover généré par Coverlet
-          flags: unittests
-          name: code-coverage-report
-          fail_ci_if_error: true
