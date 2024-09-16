@@ -36,21 +36,21 @@ jobs:
       - name: Run tests with code coverage
         run: dotnet test simpl_cine.test/simpl_cine.test.csproj --no-restore --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./TestResults/coverage.lcov --verbosity detailed
 
-      # Étape 6 : Convertir le rapport LCOV en format OpenCover
-      - name: Convert lcov to opencover
-        run: |
-          sudo apt-get install -y nodejs
-          sudo npm install -g lcov-to-opencover
-          lcov-to-opencover -i ./TestResults/coverage.lcov -o ./TestResults/coverage.opencover.xml
-      
+      # Étape 6 : Installer ReportGenerator
+      - name: Install ReportGenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
-      # Étape 7 : Analyse SonarCloud avec le rapport de couverture de code
+      # Étape 7 : Convertir le rapport LCOV en OpenCover avec ReportGenerator
+      - name: Convert lcov to opencover
+        run: reportgenerator "-reports:./TestResults/coverage.lcov" "-targetdir:./coverage-report" "-reporttypes:OpenCover"
+
+      # Étape 8 : Analyse SonarCloud avec le rapport de couverture de code
       - name: SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          dotnet sonarscanner begin /k:"Talicke_Api-gateway" /o:"talicke" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./TestResults/coverage.opencover.xml"
+          dotnet sonarscanner begin /k:"Talicke_Api-gateway" /o:"talicke" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./coverage-report/coverage.opencover.xml"
           dotnet build simpl_cine/simpl_cine.sln
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
